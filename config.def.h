@@ -20,6 +20,7 @@ static const char *colors[][3]      = {
 
 static const char *const autostart[] = {
 	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
+	"sh", "-c", "/usr/bin/emacs --daemon", NULL,
 	NULL /* terminate */
 };
 
