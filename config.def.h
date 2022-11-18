@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 20;       /* vert inner gap between windows */
@@ -42,9 +42,10 @@ static const char *colors[][3]      = {
 static const char *const autostart[] = {
 	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
 	"sh", "-c", "/usr/bin/emacs --daemon", NULL,
-	"/usr/bin/nitrogen" "--restore", NULL,
+	"/usr/bin/nitrogen", "--restore", NULL,
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
+	"/usr/bin/picom --experimental-backend", NULL,
 	NULL /* terminate */
 };
 
