@@ -40,13 +40,17 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
+  /* Startup */
 	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
+  "/usr/bin/mpv", "--no-video", "~/Music/Sounds/startup.mp3", NULL,
+  /* Daemons */
 	"sh", "-c", "/usr/bin/emacs", "--daemon", NULL,
-	"/usr/bin/nitrogen", "--restore", NULL,
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
+	"/usr/bin/nitrogen", "--restore", NULL,
 	"/usr/bin/picom", "--experimental-backend", NULL,
-	NULL /* terminate */
+  /* Terminate */
+	NULL 
 };
 
 /* tagging */
