@@ -44,7 +44,6 @@ static const char *const autostart[] = {
 	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
   "/usr/bin/mpv", "--no-video", "~/Music/Sounds/startup.mp3", NULL,
   /* Daemons */
-	"sh", "-c", "/usr/bin/emacs", "--daemon", NULL,
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
 	"/usr/bin/nitrogen", "--restore", NULL,
@@ -150,6 +149,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
 };
 
 /* button definitions */
