@@ -97,11 +97,11 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
-#define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+#define TAGKEYS(CHAIN,KEY,TAG) \
+	{ MODKEY,                       CHAIN,    KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           CHAIN,    KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             CHAIN,    KEY,      tag,            {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, CHAIN,    KEY,      toggletag,      {.ui = 1 << TAG} },
 
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
@@ -110,48 +110,167 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
-// Volume command: pamixer -i 20 && sigdwmblocks 2 // -i for increase; -d for decrease
+static const char *suspendcmd[]  = { "systemctl", "suspend", NULL };
+static const char *shutdowncmd[]  = { "shutdown", "now", NULL };
+static const char *volupcmd[]  = { "sh", "-c", "pamixer -i 10 && sigdwmblocks 2", NULL };
+static const char *voldowncmd[]  = { "sh", "-c", "pamixer -d 10 && sigdwmblocks 2", NULL };
+static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sigdwmblocks 2", NULL };
+static const char *nocmd[]  = { "notify-send", "Not bound", NULL };
 
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
-	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	/* modifier                     chain key   key        function        argument */
+	{ MODKEY,                       -1,         XK_Return, zoom,           {0} },
+	{ MODKEY|ShiftMask,             -1,         XK_Return, spawn,          {.v = termcmd } },
+	{ MODKEY,                       -1,         XK_Tab,    view,           {0} },
+	//{ MODKEY,                       -1,         XK_Right,  incnmaster,     {.i = +1 } },
+	//{ MODKEY,                       -1,         XK_Left,   incnmaster,     {.i = -1 } },
+	{ MODKEY,                       -1,         XK_Left,   setmfact,       {.f = -0.05} },
+	{ MODKEY,                       -1,         XK_Right,  setmfact,       {.f = +0.05} },
+	{ MODKEY,                       -1,         XK_Up, spawn, {.v = volupcmd } },
+	{ MODKEY,                       -1,         XK_Down, spawn, {.v = voldowncmd } },
+	{ MODKEY,                       -1,         XK_0,      view,           {.ui = ~0 } },
+	{ MODKEY|ShiftMask,             -1,         XK_0,      tag,            {.ui = ~0 } },
+	{ MODKEY,                       -1,         XK_comma,  focusmon,       {.i = -1 } },
+	{ MODKEY,                       -1,         XK_period, focusmon,       {.i = +1 } },
+	{ MODKEY|ShiftMask,             -1,         XK_comma,  tagmon,         {.i = -1 } },
+	{ MODKEY|ShiftMask,             -1,         XK_period, tagmon,         {.i = +1 } },
+	//{ MODKEY|ControlMask,           -1,         XK_Return, spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_Return, spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_Return, spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_a,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_a,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_a,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_a,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_b,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_b,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_b,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_b,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_c,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_c,      spawn,          {.v = nocmd } },
+	{ MODKEY|ShiftMask,             -1,         XK_c,      killclient,     {0} },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_c,      spawn,          {.v = nocmd } },
+	{ MODKEY,                       -1,         XK_d,      spawn,          {.v = dmenucmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_d,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_d,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_d,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_e,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_e,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_e,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_e,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_f,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_f,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_f,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_f,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_g,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_g,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_g,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_g,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_h,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_h,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_h,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_h,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_i,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_i,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_i,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_i,      spawn,          {.v = nocmd } },
+	{ MODKEY,                       -1,         XK_j,       focusstack,    {.i = +1 } },
+	//{ MODKEY|ControlMask,           -1,         XK_j,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_j,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_j,      spawn,          {.v = nocmd } },
+	{ MODKEY,                       -1,         XK_k,      focusstack,     {.i = -1 } },
+	//{ MODKEY,                       -1,         XK_k,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_k,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_k,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_k,      spawn,          {.v = nocmd } },
+	{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[ 0]} }, // tile
+	{ MODKEY,                       XK_l,       XK_m,      setlayout,      {.v = &layouts[ 1]} }, // monocle
+	{ MODKEY,                       XK_l,       XK_s,      setlayout,      {.v = &layouts[ 2]} }, // spiral
+	{ MODKEY,                       XK_l,       XK_w,      setlayout,      {.v = &layouts[ 3]} }, // dwindle
+	{ MODKEY,                       XK_l,       XK_d,      setlayout,      {.v = &layouts[ 4]} }, // deck
+	//{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[ 5]} }, // bstack
+	//{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[ 6]} }, // bstackhoriz
+	{ MODKEY,                       XK_l,       XK_g,      setlayout,      {.v = &layouts[ 7]} }, // grid
+	//{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[ 8]} }, // nrowgrid
+	{ MODKEY,                       XK_l,       XK_h,      setlayout,      {.v = &layouts[ 9]} }, // horizgrid
+	//{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[10]} }, // gaplessgrid
+	{ MODKEY,                       XK_l,       XK_c,      setlayout,      {.v = &layouts[11]} }, // centeredmaster
+	//{ MODKEY,                       XK_l,       XK_t,      setlayout,      {.v = &layouts[12]} }, // centeredfloatingmaster
+	{ MODKEY,                       XK_l,       XK_f,      setlayout,      {0} }, // floating
+	//{ MODKEY,                       -1,         XK_m,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask,           -1,         XK_m,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ShiftMask,             -1,         XK_m,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_m,      spawn,          {.v = nocmd } },     
+	//{ MODKEY,                       -1,         XK_n,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask,           -1,         XK_n,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ShiftMask,             -1,         XK_n,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_n,      spawn,          {.v = nocmd } },     
+	//{ MODKEY,                       -1,         XK_o,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask,           -1,         XK_o,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ShiftMask,             -1,         XK_o,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_o,      spawn,          {.v = nocmd } },     
+	//{ MODKEY,                       -1,         XK_p,      spawn,          {.v = nocmd } },     
+	//{ MODKEY|ControlMask,           -1,         XK_p,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_p,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_p,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_q,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_q,      spawn,          {.v = nocmd } },
+	{ MODKEY|ShiftMask,             XK_q,         XK_q,      quit,          {0} }, // logout
+	{ MODKEY|ShiftMask,             XK_q,         XK_p,      spawn,          {.v = shutdowncmd} }, // power off
+	{ MODKEY|ShiftMask,             XK_q,         XK_s,      spawn,          {.v = suspendcmd} }, // suspend
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_q,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_r,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_r,      spawn,          {.v = nocmd } },
+	{ MODKEY|ShiftMask,             -1,         XK_r,      quit,          {1} }, // restart dwm
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_r,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_s,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_s,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_s,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_s,      spawn,          {.v = nocmd } },
+	{ MODKEY,                       XK_t,       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_t,       XK_f,      togglefloating, {0} },
+	{ MODKEY,                       XK_t,       XK_g,      togglegaps,     {0} },
+	{ MODKEY,                       XK_t,       XK_m,      spawn,     {.v = mutecmd} },
+	//{ MODKEY,                       -1,         XK_u,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_u,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_u,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_u,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_v,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_v,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_v,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_v,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_w,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_w,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_w,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_w,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_x,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_x,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_x,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_x,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_y,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_y,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_y,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_y,      spawn,          {.v = nocmd } },
+	//{ MODKEY,                       -1,         XK_z,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask,           -1,         XK_z,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ShiftMask,             -1,         XK_z,      spawn,          {.v = nocmd } },
+	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_z,      spawn,          {.v = nocmd } },
+	TAGKEYS(                        -1,           XK_1,                      0)
+	TAGKEYS(                        -1,           XK_2,                      1)
+	TAGKEYS(                        -1,           XK_3,                      2)
+	TAGKEYS(                        -1,           XK_4,                      3)
+	TAGKEYS(                        -1,           XK_5,                      4)
+	TAGKEYS(                        -1,           XK_6,                      5)
+	TAGKEYS(                        -1,           XK_7,                      6)
+	TAGKEYS(                        -1,           XK_8,                      7)
+	TAGKEYS(                        -1,           XK_9,                      8)
+
+  /*
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY|Mod1Mask,              XK_u,      incrgaps,       {.i = +1 } },
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_u,      incrgaps,       {.i = -1 } },
-	{ MODKEY|Mod1Mask,              XK_0,      togglegaps,     {0} },
 	{ MODKEY|Mod1Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
-	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
-	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
-	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	TAGKEYS(                        XK_1,                      0)
-	TAGKEYS(                        XK_2,                      1)
-	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-	TAGKEYS(                        XK_6,                      5)
-	TAGKEYS(                        XK_7,                      6)
-	TAGKEYS(                        XK_8,                      7)
-	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
+  */
 };
 
 /* button definitions */
