@@ -116,6 +116,8 @@ static const char *volupcmd[]  = { "sh", "-c", "pamixer -i 10 && sigdwmblocks 2"
 static const char *voldowncmd[]  = { "sh", "-c", "pamixer -d 10 && sigdwmblocks 2", NULL };
 static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sigdwmblocks 2", NULL };
 static const char *nocmd[]  = { "notify-send", "Not bound", NULL };
+static const char *screenshotfullcmd[]  = { "spectacle", "--fullscreen", NULL };
+static const char *screenshotregioncmd[]  = { "spectacle", "--region", NULL };
 
 static Key keys[] = {
 	/* modifier                     chain key   key        function        argument */
@@ -223,8 +225,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             -1,         XK_r,      quit,          {1} }, // restart dwm
 	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_r,      spawn,          {.v = nocmd } },
 	//{ MODKEY,                       -1,         XK_s,      spawn,          {.v = nocmd } },
-	//{ MODKEY|ControlMask,           -1,         XK_s,      spawn,          {.v = nocmd } },
-	//{ MODKEY|ShiftMask,             -1,         XK_s,      spawn,          {.v = nocmd } },
+	{ MODKEY|ControlMask,           -1,         XK_s,      spawn,          {.v = screenshotfullcmd } },
+	{ MODKEY|ShiftMask,             -1,         XK_s,      spawn,          {.v = screenshotregioncmd } },
 	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_s,      spawn,          {.v = nocmd } },
 	{ MODKEY,                       XK_t,       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_t,       XK_f,      togglefloating, {0} },
