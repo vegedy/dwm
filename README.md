@@ -12,7 +12,7 @@ In order to build dwm you need the Xlib header files.
 
 ## Modifications
 
-The modifications and patches applied to the original dwm source code have been made by [Your Name]. These changes are also released under the MIT/X Consortium License.
+The modifications and patches applied to the original dwm source code have been made by Benito Zenz. These changes are also released under the MIT/X Consortium License.
 
 ## License
 
