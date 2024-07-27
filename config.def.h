@@ -43,14 +43,15 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
-  /* Startup */
-	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
-  "/usr/bin/mpv", "--no-video", "~/Music/Sounds/startup.mp3", NULL,
   /* Daemons */
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
 	"/usr/bin/nitrogen", "--restore", NULL,
 	"/usr/bin/picom", "--experimental-backend", NULL,
+  /* Startup */
+	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
+  "/usr/bin/mpv", "--no-video", "/home/bzenz/Music/Sounds/startup.mp3", NULL,
+  "/usr/local/bin/sigdwmblocks", "2", NULL, // Update volume display
   /* Terminate */
 	NULL 
 };
@@ -116,9 +117,9 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *termcmd[]  = { "alacritty", NULL };
 static const char *suspendcmd[]  = { "systemctl", "suspend", NULL };
 static const char *shutdowncmd[]  = { "shutdown", "now", NULL };
-static const char *volupcmd[]  = { "sh", "-c", "pamixer -i 10 && sleep 0 && sigdwmblocks 2", NULL };
-static const char *voldowncmd[]  = { "sh", "-c", "pamixer -d 10 && sleep 0 && sigdwmblocks 2", NULL };
-static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sleep 0 && sigdwmblocks 2", NULL };
+static const char *volupcmd[]  = { "sh", "-c", "pamixer -i 10 && sigdwmblocks 2", NULL };
+static const char *voldowncmd[]  = { "sh", "-c", "pamixer -d 10 && sigdwmblocks 2", NULL };
+static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sigdwmblocks 2", NULL };
 static const char *nocmd[]  = { "notify-send", "Not bound", NULL };
 static const char *screenshotfullcmd[]  = { "spectacle", "--fullscreen", NULL };
 static const char *screenshotregioncmd[]  = { "spectacle", "--region", NULL };
