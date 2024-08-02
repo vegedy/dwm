@@ -47,10 +47,10 @@ static const char *const autostart[] = {
 	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
   "/usr/bin/mpv", "--no-video", "/home/bzenz/Music/Sounds/startup.mp3", NULL,
   "/usr/local/bin/sigdwmblocks", "2", NULL, // Update volume display
+  "/home/bzenz/.scripts/set-bg.sh", NULL, // Call background setter
   /* Daemons */
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
-	"/usr/bin/nitrogen", "--restore", NULL,
 	"/usr/bin/picom", "--experimental-backend", NULL,
   /* Terminate */
 	NULL 
