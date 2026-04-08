@@ -44,14 +44,14 @@ static const char *colors[][3]      = {
 
 static const char *const autostart[] = {
   /* Startup */
-	"sh", "/home/bzenz/.screenlayout/default.sh", NULL,
-  "/usr/bin/mpv", "--no-video", "--volume=60", "/home/bzenz/Music/Sounds/startup.mp3", NULL,
+	"sh", "/home/benito/.screenlayout/default.sh", NULL,
+  "/usr/bin/mpv", "--no-video", "--volume=60", "/home/benito/Music/Sounds/startup.mp3", NULL,
   "/usr/local/bin/sigdwmblocks", "2", NULL, // Update volume display
   "wal", "-R", NULL, // Set background
   /* Daemons */
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
-	"/usr/bin/picom", "--experimental-backend", NULL,
+	"/usr/bin/picom", NULL,
   /* Terminate */
 	NULL 
 };
