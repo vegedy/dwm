@@ -13,19 +13,23 @@ static const unsigned int gappov    = 20;       /* vert outer gap between window
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
-static const char col1[]            = "#ffffff";
-static const char col2[]            = "#ffffff";
-static const char col3[]            = "#ffffff";
-static const char col4[]            = "#ffffff";
-static const char col5[]            = "#ffffff";
-static const char col6[]            = "#ffffff";
+static const int horizpadbar        = 8;        /* horizontal padding for statusbar */
+static const int vertpadbar         = 2;        /* vertical padding for statusbar */
+static const unsigned int bargaph   = 20;       /* horizontal gap for bar (floating) */
+static const unsigned int bargapv   = 4;        /* vertical gap for bar (floating) */
+static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=11", "monospace:size=10" };
+static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=11";
+static const char col_gray1[]       = "#1e1e2e";
+static const char col_gray2[]       = "#313244";
+static const char col_gray3[]       = "#a6adc8";
+static const char col_gray4[]       = "#cdd6f4";
+static const char col_cyan[]        = "#89b4fa";
+static const char col1[]            = "#cba6f7";
+static const char col2[]            = "#a6e3a1";
+static const char col3[]            = "#f9e2af";
+static const char col4[]            = "#fab387";
+static const char col5[]            = "#f38ba8";
+static const char col6[]            = "#94e2d5";
 
 enum { SchemeNorm, SchemeCol1, SchemeCol2, SchemeCol3, SchemeCol4,
        SchemeCol5, SchemeCol6, SchemeSel }; /* color schemes */

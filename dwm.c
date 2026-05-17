@@ -75,7 +75,7 @@
 enum { CurNormal, CurHand, CurResize, CurMove, CurLast }; /* cursor */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
-       NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
+       NetWMWindowTypeDialog, NetWMWindowTypeDock, NetClientList, NetLast }; /* EWMH atoms */
 enum { WMProtocols, WMDelete, WMState, WMTakeFocus, WMLast }; /* default atoms */
 enum { ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle,
        ClkClientWin, ClkRootWin, ClkLast }; /* clicks */
@@ -548,6 +548,7 @@ buttonpress(XEvent *e)
 		focus(NULL);
 	}
 	if (ev->window == selmon->barwin) {
+		int bw = selmon->ww - 2 * bargaph;
                 if (ev->x < ble - blw) {
                         i = -1, x = -ev->x;
                         do
@@ -557,9 +558,9 @@ buttonpress(XEvent *e)
                         arg.ui = 1 << i;
                 } else if (ev->x < ble)
                         click = ClkLtSymbol;
-                else if (ev->x < selmon->ww - wstext)
+                else if (ev->x < bw - wstext)
                         click = ClkWinTitle;
-                else if ((x = selmon->ww - RSPAD - ev->x) > 0 && (x -= wstext - LSPAD - RSPAD) <= 0) {
+                else if ((x = bw - RSPAD - ev->x) > 0 && (x -= wstext - LSPAD - RSPAD) <= 0) {
                         updatedwmblockssig(x);
                         click = ClkStatusText;
                 } else
@@ -689,7 +690,7 @@ configurenotify(XEvent *e)
 				for (c = m->clients; c; c = c->next)
 					if (c->isfullscreen)
 						resizeclient(c, m->mx, m->my, m->mw, m->mh);
-				XMoveResizeWindow(dpy, m->barwin, m->wx, m->by, m->ww, bh);
+				XMoveResizeWindow(dpy, m->barwin, m->wx + bargaph, m->by, m->ww - 2 * bargaph, bh);
 			}
 			focus(NULL);
 			arrange(NULL);
@@ -824,7 +825,7 @@ dirtomon(int dir)
 void
 drawbar(Monitor *m)
 {
-	int x, w;
+	int x, w, mw;
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
@@ -833,6 +834,8 @@ drawbar(Monitor *m)
 	if (!m->showbar)
 		return;
 
+	mw = m->ww - 2 * bargaph;
+
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
                 char *stc = stextc;
@@ -840,7 +843,7 @@ drawbar(Monitor *m)
                 char tmp;
 
                 drw_setscheme(drw, scheme[SchemeNorm]);
-                x = m->ww - wstext;
+                x = mw - wstext;
                 drw_rect(drw, x, 0, LSPAD, bh, 1, 1); x += LSPAD; /* to keep left padding clean */
                 for (;;) {
                         if ((unsigned char)*stc >= ' ') {
@@ -860,7 +863,7 @@ drawbar(Monitor *m)
                         stp = ++stc;
                 }
                 drw_setscheme(drw, scheme[SchemeNorm]);
-                drw_rect(drw, x, 0, m->ww - x, bh, 1, 1); /* to keep right padding clean */
+                drw_rect(drw, x, 0, mw - x, bh, 1, 1); /* to keep right padding clean */
 	}
 
 	for (c = m->clients; c; c = c->next) {
@@ -885,9 +888,9 @@ drawbar(Monitor *m)
 
         if (m == selmon) {
                 blw = w, ble = x;
-                w = m->ww - wstext - x;
+                w = mw - wstext - x;
         } else
-                w = m->ww - x;
+                w = mw - x;
 
 	if (w > bh) {
 		if (m->sel) {
@@ -900,7 +903,7 @@ drawbar(Monitor *m)
 			drw_rect(drw, x, 0, w, bh, 1, 1);
 		}
 	}
-	drw_map(drw, m->barwin, 0, 0, m->ww, bh);
+	drw_map(drw, m->barwin, 0, 0, mw, bh);
 }
 
 void
@@ -1320,7 +1323,7 @@ motionnotify(XEvent *e)
                         focus(NULL);
                 }
                 mon = m;
-        } else if (ev->window == selmon->barwin && (x = selmon->ww - RSPAD - ev->x) > 0
+        } else if (ev->window == selmon->barwin && (x = (selmon->ww - 2 * bargaph) - RSPAD - ev->x) > 0
                                                 && (x -= wstext - LSPAD - RSPAD) <= 0)
                 updatedwmblockssig(x);
         else if (selmon->statushandcursor) {
@@ -1808,8 +1811,8 @@ setup(void)
 	drw = drw_create(dpy, screen, root, sw, sh);
 	if (!drw_fontset_create(drw, fonts, LENGTH(fonts)))
 		die("no fonts could be loaded.");
-	lrpad = drw->fonts->h;
-	bh = drw->fonts->h + 2;
+	lrpad = drw->fonts->h + horizpadbar;
+	bh = drw->fonts->h + vertpadbar;
 	updategeom();
 	/* init atoms */
 	utf8string = XInternAtom(dpy, "UTF8_STRING", False);
@@ -1825,6 +1828,7 @@ setup(void)
 	netatom[NetWMFullscreen] = XInternAtom(dpy, "_NET_WM_STATE_FULLSCREEN", False);
 	netatom[NetWMWindowType] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE", False);
 	netatom[NetWMWindowTypeDialog] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DIALOG", False);
+	netatom[NetWMWindowTypeDock] = XInternAtom(dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
 	netatom[NetClientList] = XInternAtom(dpy, "_NET_CLIENT_LIST", False);
 	/* init cursors */
 	cursor[CurNormal] = drw_cur_create(drw, XC_left_ptr);
@@ -2001,7 +2005,7 @@ togglebar(const Arg *arg)
 {
 	selmon->showbar = !selmon->showbar;
 	updatebarpos(selmon);
-	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx, selmon->by, selmon->ww, bh);
+	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx + bargaph, selmon->by, selmon->ww - 2 * bargaph, bh);
 	arrange(selmon);
 }
 
@@ -2128,12 +2132,15 @@ updatebars(void)
 	for (m = mons; m; m = m->next) {
 		if (m->barwin)
 			continue;
-		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, m->ww, bh, 0, DefaultDepth(dpy, screen),
+		m->barwin = XCreateWindow(dpy, root, m->wx + bargaph, m->by,
+				m->ww - 2 * bargaph, bh, 0, DefaultDepth(dpy, screen),
 				CopyFromParent, DefaultVisual(dpy, screen),
 				CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
 		XMapRaised(dpy, m->barwin);
 		XSetClassHint(dpy, m->barwin, &ch);
+		XChangeProperty(dpy, m->barwin, netatom[NetWMWindowType], XA_ATOM, 32,
+				PropModeReplace, (unsigned char *)&netatom[NetWMWindowTypeDock], 1);
 	}
 }
 
@@ -2143,9 +2150,9 @@ updatebarpos(Monitor *m)
 	m->wy = m->my;
 	m->wh = m->mh;
 	if (m->showbar) {
-		m->wh -= bh;
-		m->by = m->topbar ? m->wy : m->wy + m->wh;
-		m->wy = m->topbar ? m->wy + bh : m->wy;
+		m->wh -= bh + bargapv;
+		m->by = m->topbar ? m->wy + bargapv : m->wy + m->wh;
+		m->wy = m->topbar ? m->wy + bh + bargapv : m->wy;
 	} else
 		m->by = -bh;
 }
