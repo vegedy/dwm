@@ -19,11 +19,11 @@ static const unsigned int bargaph   = 20;       /* horizontal gap for bar (float
 static const unsigned int bargapv   = 4;        /* vertical gap for bar (floating) */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=11", "monospace:size=10" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=11";
-static const char col_gray1[]       = "#1e1e2e";
-static const char col_gray2[]       = "#313244";
-static const char col_gray3[]       = "#a6adc8";
-static const char col_gray4[]       = "#cdd6f4";
-static const char col_cyan[]        = "#89b4fa";
+static const char col_gray1[]       = "#1c1c1c";
+static const char col_gray2[]       = "#2a2a2a";
+static const char col_gray3[]       = "#a0a0a0";
+static const char col_gray4[]       = "#e0e0e0";
+static const char col_cyan[]        = "#5294e2";
 static const char col1[]            = "#cba6f7";
 static const char col2[]            = "#a6e3a1";
 static const char col3[]            = "#f9e2af";
