@@ -1,3 +1,5 @@
+#!/bin/env bash
+
 rm config.h
 make clean
 make || exit 1
