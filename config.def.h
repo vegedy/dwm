@@ -135,8 +135,8 @@ static const char *volupcmd[]  = { "sh", "-c", "pamixer -i 10 && sigdwmblocks 2"
 static const char *voldowncmd[]  = { "sh", "-c", "pamixer -d 10 && sigdwmblocks 2", NULL };
 static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sigdwmblocks 2", NULL };
 static const char *nocmd[]  = { "notify-send", "Not bound", NULL };
-static const char *screenshotfullcmd[]  = { "spectacle", "--fullscreen", NULL };
-static const char *screenshotregioncmd[]  = { "spectacle", "--region", NULL };
+static const char *screenshotfullcmd[]  = { "screenshot", "--fullscreen", NULL };
+static const char *screenshotregioncmd[]  = { "screenshot", NULL };
 
 static Key keys[] = {
 	/* modifier                     chain key   key        function        argument */
