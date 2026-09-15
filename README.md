@@ -27,6 +27,8 @@ Afterwards you can log out of your session and back in or restart dwm with MOD+S
 
 This version of dwm uses the [keychain](https://dwm.suckless.org/patches/keychain/) patch, therefore many function require two keypresses in quick succession.
 
+The [pertag](https://dwm.suckless.org/patches/pertag/) patch is applied, so layouts, gaps, master size, bar visibility, and the selected window are remembered per tag.
+
 ### Basic movement
 - MOD + Return: Make selected window the master
 - MOD + LEFT: Decrease master size
@@ -69,7 +71,7 @@ This version of dwm uses the [keychain](https://dwm.suckless.org/patches/keychai
 - MOD + T: Toggle:
     - B: Toggle bar
     - F: Toggle floating
-    - G: Toggle gaps
+    - G: Toggle gaps (current tag only)
     - M: Toggle mute
 
 ### Additional tools

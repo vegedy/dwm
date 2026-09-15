@@ -16,8 +16,9 @@ This is a patched, personal build of [suckless dwm](https://dwm.suckless.org/) (
 ## Patches and source layout
 
 - Applied patches are stored in `patches/` for reference only; do **not** re-apply them.
-- Notable patches in use: keychain (chord keybindings), systray, swallow, vanitygaps, restartsig, restoreafterrestart, dwmblocks, cool-autostart, statusallmons, truecenteredtitle.
-- Extra compile units beyond upstream dwm: `vanitygaps.c`, `transient.c`. They are included via the Makefile and `dwm.c`, so keep them consistent with layout definitions in `config.def.h`.
+- Notable patches in use: keychain (chord keybindings), systray, swallow, vanitygaps, pertag (per-tag layout, mfact, nmaster, bar, gaps, and last selected client), restartsig, restoreafterrestart, dwmblocks, cool-autostart, statusallmons, truecenteredtitle.
+- Extra source files beyond upstream dwm: `vanitygaps.c` (textually included from `config.def.h`, i.e. from `config.h`) and `transient.c` (standalone helper, not compiled into dwm). Keep `vanitygaps.c` consistent with the layout definitions in `config.def.h`.
+- Pertag caveat: `vanitygaps.c` is included before `struct Pertag` is defined in `dwm.c`, so the pertag-aware `togglegaps()` and `getgaps()` are defined in `dwm.c` after `struct Pertag` instead. `PERTAG_PATCH` is defined in `dwm.c` just before `#include "config.h"` and activates the per-tag gaps code. Do not re-add these functions when syncing `vanitygaps.c` from upstream.
 
 ## Dependencies
 
