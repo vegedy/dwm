@@ -215,6 +215,7 @@ static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Atom getatomprop(Client *c, Atom prop);
+static void getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
 static unsigned int getsystraywidth();
@@ -265,6 +266,7 @@ static void tag(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglegaps(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -346,6 +348,8 @@ static KeySym keychain = -1;
 
 static xcb_connection_t *xcon;
 
+#define PERTAG_PATCH 1 /* enables per-tag gaps in vanitygaps.c */
+
 /* configuration, allows nested code to access above variables */
 #include "config.h"
 
@@ -356,6 +360,7 @@ struct Pertag {
 	unsigned int sellts[LENGTH(tags) + 1]; /* selected layouts */
 	const Layout *ltidxs[LENGTH(tags) + 1][2]; /* matrix of tags and layouts indexes  */
 	int showbars[LENGTH(tags) + 1]; /* display bar for the current tag */
+	int enablegaps[LENGTH(tags) + 1]; /* gaps enabled for the current tag */
 	Client *sel[LENGTH(tags) + 1]; /* selected client */
 };
 
@@ -884,6 +889,7 @@ createmon(void)
 		m->pertag->sellts[i] = m->sellt;
 
 		m->pertag->showbars[i] = m->showbar;
+		m->pertag->enablegaps[i] = 1;
 	}
 
 	return m;
@@ -1174,6 +1180,26 @@ getatomprop(Client *c, Atom prop)
 		XFree(p);
 	}
 	return atom;
+}
+
+void
+getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc)
+{
+	unsigned int n, oe, ie;
+	Client *c;
+
+	oe = ie = m->pertag->enablegaps[m->pertag->curtag];
+
+	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	if (smartgaps && n == 1) {
+		oe = 0; /* outer gaps disabled when only one client */
+	}
+
+	*oh = m->gappoh*oe; /* outer horizontal gap */
+	*ov = m->gappov*oe; /* outer vertical gap */
+	*ih = m->gappih*ie; /* inner horizontal gap */
+	*iv = m->gappiv*ie; /* inner vertical gap */
+	*nc = n;            /* number of clients */
 }
 
 int
@@ -2210,6 +2236,13 @@ togglefloating(const Arg *arg)
 		resize(selmon->sel, selmon->sel->x, selmon->sel->y,
 			selmon->sel->w, selmon->sel->h, 0);
 	arrange(selmon);
+}
+
+void
+togglegaps(const Arg *arg)
+{
+	selmon->pertag->enablegaps[selmon->pertag->curtag] = !selmon->pertag->enablegaps[selmon->pertag->curtag];
+	arrange(NULL);
 }
 
 void
