@@ -67,8 +67,15 @@ static const char *const autostart[] = {
 
 /* tagging */
 static const char *tags[] = {
-    "dev", "web", "notes", "chat", "remote",
-    "ai", "ops", "media", "scratch"
+    "dev",
+    "web",
+    "note",
+    "chat",
+    "rem",
+    "ai",
+    "ops",
+    "med",
+    "temp"
 };
 
 static const Rule rules[] = {
