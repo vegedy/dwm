@@ -76,6 +76,7 @@ The [pertag](https://dwm.suckless.org/patches/pertag/) patch is applied, so layo
 
 ### Additional tools
 - MOD + SHIFT + R: Restart dwm
+- MOD + F5: Reload colors from X resources
 - MOD + UP: Raise volume
 - MOD + DOWN: Lower volume
 - MOD + CONTROL + S: Screenshot (fullscreen)

@@ -24,31 +24,32 @@ static const unsigned int bargaph   = 20;       /* horizontal gap for bar (float
 static const unsigned int bargapv   = 4;        /* vertical gap for bar (floating) */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=11", "monospace:size=10" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=11";
-static const char col_gray1[]       = "#1c1c1c";
-static const char col_gray2[]       = "#2a2a2a";
-static const char col_gray3[]       = "#a0a0a0";
-static const char col_gray4[]       = "#e0e0e0";
-static const char col_cyan[]        = "#5294e2";
-static const char col1[]            = "#cba6f7";
-static const char col2[]            = "#a6e3a1";
-static const char col3[]            = "#f9e2af";
-static const char col4[]            = "#fab387";
-static const char col5[]            = "#f38ba8";
-static const char col6[]            = "#94e2d5";
+static char normbgcolor[]           = "#1c1c1c";
+static char normbordercolor[]       = "#2a2a2a";
+static char normfgcolor[]           = "#a0a0a0";
+static char selfgcolor[]            = "#e0e0e0";
+static char selbordercolor[]        = "#5294e2";
+static char selbgcolor[]            = "#5294e2";
+static char col1[]                  = "#cba6f7";
+static char col2[]                  = "#a6e3a1";
+static char col3[]                  = "#f9e2af";
+static char col4[]                  = "#fab387";
+static char col5[]                  = "#f38ba8";
+static char col6[]                  = "#94e2d5";
 
 enum { SchemeNorm, SchemeCol1, SchemeCol2, SchemeCol3, SchemeCol4,
        SchemeCol5, SchemeCol6, SchemeSel }; /* color schemes */
 
-static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	[SchemeNorm]  = { col_gray3, col_gray1, col_gray2 },
-	[SchemeCol1]  = { col1,      col_gray1, col_gray2 },
-	[SchemeCol2]  = { col2,      col_gray1, col_gray2 },
-	[SchemeCol3]  = { col3,      col_gray1, col_gray2 },
-	[SchemeCol4]  = { col4,      col_gray1, col_gray2 },
-	[SchemeCol5]  = { col5,      col_gray1, col_gray2 },
-	[SchemeCol6]  = { col6,      col_gray1, col_gray2 },
-	[SchemeSel]   = { col_gray4, col_cyan,  col_cyan  },
+static char *colors[][3]      = {
+	/*               fg           bg           border   */
+	[SchemeNorm]  = { normfgcolor, normbgcolor, normbordercolor },
+	[SchemeCol1]  = { col1,        normbgcolor, normbordercolor },
+	[SchemeCol2]  = { col2,        normbgcolor, normbordercolor },
+	[SchemeCol3]  = { col3,        normbgcolor, normbordercolor },
+	[SchemeCol4]  = { col4,        normbgcolor, normbordercolor },
+	[SchemeCol5]  = { col5,        normbgcolor, normbordercolor },
+	[SchemeCol6]  = { col6,        normbgcolor, normbordercolor },
+	[SchemeSel]   = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
 
 static const char *const autostart[] = {
@@ -140,7 +141,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", "-e", "nu", NULL };
 static const char *suspendcmd[]  = { "systemctl", "suspend", NULL };
 static const char *shutdowncmd[]  = { "shutdown", "now", NULL };
@@ -257,6 +258,7 @@ static Key keys[] = {
 	//{ MODKEY,                       -1,         XK_r,      spawn,          {.v = nocmd } },
 	//{ MODKEY|ControlMask,           -1,         XK_r,      spawn,          {.v = nocmd } },
 	{ MODKEY|ShiftMask,             -1,         XK_r,      quit,          {1} }, // restart dwm
+	{ MODKEY,                       -1,         XK_F5,     xrdb,          {0} },
 	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_r,      spawn,          {.v = nocmd } },
 	//{ MODKEY,                       -1,         XK_s,      spawn,          {.v = nocmd } },
 	{ MODKEY|ControlMask,           -1,         XK_s,      spawn,          {.v = screenshotfullcmd } },
