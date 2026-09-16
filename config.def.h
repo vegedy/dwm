@@ -128,6 +128,30 @@ static const Layout layouts[] = {
 	{ NULL,       NULL },
 };
 
+static const unsigned int taglayout[LENGTH(tags)] = {
+     0, /* Tag 1 */
+     0, /* Tag 2 */
+     0, /* Tag 3 */
+    11, /* Tag 4 */
+     1, /* Tag 5 */
+     0, /* Tag 6 */
+     0, /* Tag 7 */
+     0, /* Tag 8 */
+     0  /* Tag 9 */
+};
+
+static const int tagshowbar[LENGTH(tags)] = {
+    1, /* Tag 1 */
+    1, /* Tag 2 */
+    1, /* Tag 3 */
+    1, /* Tag 4 */
+    0, /* Tag 5 */
+    1, /* Tag 6 */
+    1, /* Tag 7 */
+    1, /* Tag 8 */
+    1  /* Tag 9 */
+};
+
 /* key definitions */
 #define MODKEY Mod4Mask
 #define TAGKEYS(CHAIN,KEY,TAG) \

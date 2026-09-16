@@ -902,11 +902,11 @@ createmon(void)
 		m->pertag->nmasters[i] = m->nmaster;
 		m->pertag->mfacts[i] = m->mfact;
 
-		m->pertag->ltidxs[i][0] = m->lt[0];
-		m->pertag->ltidxs[i][1] = m->lt[1];
+		m->pertag->ltidxs[i][0] = (i == 0) ? &layouts[0] : &layouts[taglayout[i - 1]];
+		m->pertag->ltidxs[i][1] = &layouts[0];
 		m->pertag->sellts[i] = m->sellt;
 
-		m->pertag->showbars[i] = m->showbar;
+		m->pertag->showbars[i] = (i == 0) ? m->showbar : tagshowbar[i - 1];
 		m->pertag->enablegaps[i] = 1;
 	}
 
