@@ -93,7 +93,7 @@ static const Rule rules[] = {
 	{ "Code",    NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ "firefox", NULL,     NULL,           1 << 1,    0,          0,          -1,        -1 },
 	{ "obsidian",NULL,     NULL,           1 << 2,    0,          1,           0,        -1 },
-	{ "teams.microsoft.com",NULL, NULL,    1 << 3,    0,          1,           0,        -1 },
+	{ "Chromium","teams.microsoft.com",NULL,1 << 3,   0,          1,           0,        -1 },
 	{ "TelegramDesktop",NULL,NULL,         1 << 3,    0,          1,           0,        -1 },
 	{ "Vncviewer",NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
 	{ "TigerVNC", NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
