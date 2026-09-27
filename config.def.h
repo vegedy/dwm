@@ -98,6 +98,7 @@ static const Rule rules[] = {
 	{ "Vncviewer",NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
 	{ "TigerVNC", NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
 	{ "Remmina",  NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
+	{ "Chatgpt",  NULL,    NULL,           1 << 5,    0,          1,           0,        -1 },
 };
 
 /* layout(s) */
