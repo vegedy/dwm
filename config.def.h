@@ -99,6 +99,7 @@ static const Rule rules[] = {
 	{ "TigerVNC", NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
 	{ "Remmina",  NULL,    NULL,           1 << 4,    0,          1,           0,        -1 },
 	{ "Chatgpt",  NULL,    NULL,           1 << 5,    0,          1,           0,        -1 },
+	{ NULL,"www.perplexity.ai",NULL,       1 << 5,    0,          1,           0,        -1 },
 };
 
 /* layout(s) */
