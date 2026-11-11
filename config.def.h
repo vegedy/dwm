@@ -62,6 +62,7 @@ static const char *const autostart[] = {
 	"/usr/bin/dunst", NULL,
 	"/usr/local/bin/dwmblocks", NULL,
 	"/usr/bin/picom", NULL,
+	"/usr/bin/handy", "--start-hidden", NULL,
   /* Terminate */
 	NULL 
 };
@@ -178,6 +179,7 @@ static const char *mutecmd[]  = { "sh", "-c", "pamixer -t && sigdwmblocks 2", NU
 static const char *nocmd[]  = { "notify-send", "Not bound", NULL };
 static const char *screenshotfullcmd[]  = { "screenshot", "--fullscreen", NULL };
 static const char *screenshotregioncmd[]  = { "screenshot", NULL };
+static const char *dictatecmd[] = { "handy", "--toggle-transcription", NULL };
 
 static Key keys[] = {
 	/* modifier                     chain key   key        function        argument */
@@ -266,7 +268,7 @@ static Key keys[] = {
 	//{ MODKEY|ControlMask,           -1,         XK_n,      spawn,          {.v = nocmd } },     
 	//{ MODKEY|ShiftMask,             -1,         XK_n,      spawn,          {.v = nocmd } },     
 	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_n,      spawn,          {.v = nocmd } },     
-	//{ MODKEY,                       -1,         XK_o,      spawn,          {.v = nocmd } },     
+	{ MODKEY,                         -1,         XK_o,      spawn,          {.v = dictatecmd } },
 	//{ MODKEY|ControlMask,           -1,         XK_o,      spawn,          {.v = nocmd } },     
 	//{ MODKEY|ShiftMask,             -1,         XK_o,      spawn,          {.v = nocmd } },     
 	//{ MODKEY|ControlMask|ShiftMask, -1,         XK_o,      spawn,          {.v = nocmd } },     
